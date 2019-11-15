@@ -1,18 +1,11 @@
 {
-  "name": "zeus-seed",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build && sed 's/\\\"\\/static/\\\"\\.\\/static/g' -i build/index.html",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "@material-ui/core": "^1.5.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.2.0",
     "big-integer": "^1.6.48",
     "bytebuffer": "^5.0.1",
     "eos-transit": "^4.0.1",
@@ -23,10 +16,7 @@
     "eos-transit-tokenpocket-provider": "^4.0.1",
     "eosjs": "^20.0.0",
     "eosjs-ecc": "^4.0.7",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
     "react-grid-layout": "^0.16.6",
-    "react-scripts": "^1.1.5",
     "scatterjs-core": "^2.7.18",
     "scatterjs-plugin-eosjs": "^1.5.1",
     "scatterjs-plugin-eosjs2": "^1.5.0",
@@ -34,7 +24,32 @@
     "scatterjs-plugin-web3": "^1.5.4",
     "stream-buffers": "^3.0.2",
     "tronweb": "^2.8.0",
-    "web3": "^1.2.2"
+    "web3": "^1.2.2",
+    "react-modal": "^3.5.1",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "replace": "^1.1.0",
+    "text-encoding": "^0.7.0"
   },
-  "devDependencies": {}
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

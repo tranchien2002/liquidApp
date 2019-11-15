@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Index from './pages/index';
-
+import './index.css';
+import { Provider } from 'react-redux';
+import store from './store';
+import App from './App';
 import Eos from 'eosjs';
 
 // eosio endpoint
@@ -42,7 +44,7 @@ if (local) {
 }
 
 // var ScatterJS = window.ScatterJS;
-async function init () {
+async function init() {
   // window.scatter = ScatterJS.scatter;
   const scatter = window.scatter;
   const connected = await scatter.connect('AirdropGrabber');
@@ -54,7 +56,7 @@ async function init () {
   // Use `scatter` normally now.
 
   await scatter.getIdentity(requiredFields);
-  const account = scatter.identity.accounts.find(x => x.blockchain === 'eos');
+  const account = scatter.identity.accounts.find((x) => x.blockchain === 'eos');
   // You can pass in any additional options you want into the eosjs reference.
   const eosOptions = { expireInSeconds: 600 };
   window.accountName = account.name;
@@ -62,5 +64,12 @@ async function init () {
   const eos = scatter.eos(network, Eos, eosOptions, 'http');
   window.eos = eos;
 }
+
 init();
-ReactDOM.render(<Index />, document.getElementById('root'));
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
