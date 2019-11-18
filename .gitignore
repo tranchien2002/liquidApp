@@ -242,3 +242,5 @@ templates/emptycontract-eos-cpp/generators/app/templates/CMakeLists.txt
 templates/emptycontract-eos-cpp/generators/app/templates/main.cpp
 templates/emptycontract-eos-cpp/generators/app/test-templates/contract.spec.js
 templates/emptycontract-eos-cpp/package.json
+
+nodeos.log
