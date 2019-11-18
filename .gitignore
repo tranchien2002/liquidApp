@@ -16,7 +16,7 @@ node_modules/
 .idea/
 node_modules/
 build/
-extensions/
+# extensions/
 .env
 models/boxmaps/50-zeusrepoeos.json
 
