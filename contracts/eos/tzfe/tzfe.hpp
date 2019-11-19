@@ -4,6 +4,7 @@
 #include <eosio/eosio.hpp>
 #include <eosio/system.hpp>
 #include "../dappservices/vaccounts.hpp"
+#include "../dappservices/multi_index.hpp"
 
 #define DAPPSERVICES_ACTIONS() \
   XSIGNAL_DAPPSERVICE_ACTION \
@@ -21,34 +22,34 @@ using namespace eosio;
 CONTRACT_START()
 
 	private:
-		 enum game_status: int8_t  {
-      		ONGOING = 0,
+		enum game_status: int8_t  {
+      ONGOING = 0,
 			END = 1
-    	};
+    };
 
-		struct gameState {
-			vector<vector<uint8_t>> mapState = {};
-			long int score = 0;
-			bool flag_continue = false;
-		};
+		// struct gameState {
+		// 	vector<uint8_t> mapState;
+		// 	long int score = 0;
+		// 	bool flag_continue = false;
+		// };
 
-		struct [[eosio::table]] user_info  {
-			name username;
-			gameState current_game;
-			gameState best_score_game;
+    struct [[eosio::table]] user_info {
+			name vaccount;
+			// gameState current_game;
+			// gameState best_score_game;
+      long int best_score = 0;
 
-			auto primary_key() const { return username.value; }
-		};
+      auto primary_key() const { return vaccount.value; }
+    };
 
-
-		struct rank {
-			name username;
+    struct rank {
+			name vaccount;
 			long int score;
 		};
 
 		struct [[eosio::table]] charts {
-			std::string date;
-			rank top[100];
+			uint64_t date;
+			vector<rank> top;
 
 			auto primary_key() const { return date; }
 		};
@@ -69,7 +70,7 @@ CONTRACT_START()
 		users_table _users;
 		charts_table  _charts;
 
-		//void sort_rank(rank rank_data);
+		void sort_rank(uint8_t date, name vaccount, long int score);
 
 	public:
 
@@ -77,24 +78,34 @@ CONTRACT_START()
 		 _users(receiver, receiver.value, 1024, 64, false, false, VACCOUNTS_DELAYED_CLEANUP),
 			_charts(receiver, receiver.value){}
 
-		struct player_struct {
-			name username;
-			EOSLIB_SERIALIZE( player_struct, (username) )
-		};
+    // struct login_struct {
+    //   name vaccount;
+    //   EOSLIB_SERIALIZE( login_struct, (vaccount))
+    // };
 
-		[[eosio::action]]
-		void login(player_struct payload);
+    struct user_struct {
+      uint8_t date;
+      name vaccount;
+      long int score;
+      EOSLIB_SERIALIZE( user_struct,(date)(vaccount)(score))
+    };
 
-		[[eosio::action]]
-		void startgame(player_struct payload);
+    // [[eosio::action]]
+    // void login(login_struct payload);
+
+    // [[eosio::action]]
+		// void startgame(user_struct payload);
 
 		// [[eosio::action]]
-		// gameState continuegame(player_struct payload);
+		// tzfe::gameState continuegame(user_struct payload);
+
+		// [[eosio::action]]
+		// void savegame(user_struct payload);
 
 		[[eosio::action]]
-		void savegame(player_struct payload, vector<vector<uint8_t>> mapState, long int score);
+		void endgame(user_struct payload);
 
-		[[eosio::action]]
-		void endgame(player_struct payload, vector<vector<uint8_t>> mapState, long int score, std::string date);
-	VACCOUNTS_APPLY(((player_struct)(login)))
-CONTRACT_END((login)(xdcommit)(regaccount))
+  // VACCOUNTS_APPLY(((login_struct)(login))((user_struct)(startgame))((user_struct)(endgame))((user_struct)(savegame))((user_struct)(continuegame)))
+  VACCOUNTS_APPLY(((user_struct)(endgame)))
+// CONTRACT_END((login)(startgame)(savegame)(endgame)(xdcommit)(regaccount))
+CONTRACT_END((endgame)(xdcommit)(xvinit)(regaccount))
