@@ -65,7 +65,7 @@ async function init() {
   window.eos = eos;
 }
 
-init();
+// init();
 
 ReactDOM.render(
   <Provider store={store}>
