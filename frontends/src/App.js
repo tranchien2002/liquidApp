@@ -5,11 +5,26 @@ import { Board } from './components/board';
 import Cell from './components/Cell';
 import TileView from './components/TileView';
 import GameEndOverlay from './components/GameEndOverlay';
-
-export default class App extends React.Component {
+import { ApiService } from './services';
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { board: new Board() };
+  }
+
+  async componentDidMount() {
+    try {
+      await ApiService.register({
+        username: 'tranchientm1',
+        pass: '5Ki3YVxHznHvTFyvZESMu6inTWG6mbit7dP2rVkAb3ykRs3HqLs',
+        key: '5JDPXqeZ45NfEC3iWLc8CHXxGcx1ExGt6D9S6y49qQXpfTC9nTC',
+        error: ''
+      });
+    } catch (e) {
+      console.log('login');
+      console.log(e);
+    }
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   restartGame() {
@@ -59,10 +74,6 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown.bind(this));
-  }
-
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown.bind(this));
   }
@@ -95,3 +106,5 @@ export default class App extends React.Component {
     );
   }
 }
+
+export default App;

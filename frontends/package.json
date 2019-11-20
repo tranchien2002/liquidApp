@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@liquidapps/dapp-client": "^2.0.2615-staging",
     "big-integer": "^1.6.48",
     "bytebuffer": "^5.0.1",
     "eos-transit": "^4.0.1",
@@ -22,6 +23,7 @@
     "react-scripts": "3.2.0",
     "redux": "^4.0.0",
     "replace": "^1.1.0",
+    "standard-ecies": "^1.0.0",
     "text-encoding": "^0.7.0",
     "tronweb": "^2.8.0",
     "web3": "^1.2.2"
