@@ -10,9 +10,14 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { board: new Board() };
+    localStorage.setItem('bestscore', 0);
   }
 
   restartGame() {
+    this.setState({ board: new Board() });
+  }
+
+  newGame() {
     this.setState({ board: new Board() });
   }
 
@@ -82,15 +87,24 @@ export default class App extends React.Component {
       .filter((tile) => tile.value !== 0)
       .map((tile) => <TileView tile={tile} key={tile.id} />);
     return (
-      <div
-        className='board'
-        onTouchStart={this.handleTouchStart.bind(this)}
-        onTouchEnd={this.handleTouchEnd.bind(this)}
-        tabIndex='1'
-      >
-        {cells}
-        {tiles}
-        <GameEndOverlay board={this.state.board} onRestart={this.restartGame.bind(this)} />
+      <div>
+        <div className='scores'>
+          <span className='score'>scores: {this.state.board.getScore()}</span>
+          <span className='best-score'>best: {localStorage.getItem('bestscore')}</span>
+        </div>
+        <div className='newGame'>
+          <span onClick={this.newGame.bind(this)}>New Game</span>
+        </div>
+        <div
+          className='board'
+          onTouchStart={this.handleTouchStart.bind(this)}
+          onTouchEnd={this.handleTouchEnd.bind(this)}
+          tabIndex='1'
+        >
+          {cells}
+          {tiles}
+          <GameEndOverlay board={this.state.board} onRestart={this.restartGame.bind(this)} />
+        </div>
       </div>
     );
   }

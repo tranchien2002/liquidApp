@@ -68,6 +68,7 @@ export let Board = function() {
   this.addRandomTile();
   this.setPositions();
   this.won = false;
+  this.score = 0;
 };
 
 Board.prototype.addTile = function() {
@@ -93,14 +94,24 @@ Board.prototype.moveLeft = function() {
         let tile2 = currentRow.shift();
         tile2.mergedInto = targetTile;
         targetTile.value += tile2.value;
+        this.score += tile2.value * 2;
+        let bestScore = localStorage.getItem('bestscore');
+        if (this.score > bestScore) {
+          localStorage.setItem('bestscore', this.score);
+        }
       }
       resultRow[target] = targetTile;
-      this.won |= targetTile.value === 2048;
+      this.won |= targetTile.value === 16777216;
       hasChanged |= targetTile.value !== this.cells[row][target].value;
     }
     this.cells[row] = resultRow;
   }
+  console.log(hasChanged);
   return hasChanged;
+};
+
+Board.prototype.getScore = function() {
+  return this.score;
 };
 
 Board.prototype.setPositions = function() {
