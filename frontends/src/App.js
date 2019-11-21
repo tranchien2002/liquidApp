@@ -6,9 +6,13 @@ import Register from './components/Register';
 import Cell from './components/Cell';
 import TileView from './components/TileView';
 import GameEndOverlay from './components/GameEndOverlay';
+<<<<<<< HEAD
 import 'bootstrap/dist/css/bootstrap.css';
 import ApiService from './services/ApiService';
 const { seedPrivate } = require('eosjs-ecc');
+=======
+import ApiService from './services/ApiService';
+>>>>>>> api service call endgame action
 
 export default class App extends React.Component {
   constructor(props) {
@@ -36,6 +40,15 @@ export default class App extends React.Component {
   newGame() {
     this.setState({ board: new Board() });
   }
+
+  saveGame = async () => {
+    try {
+      // await ApiService.endGame(this.state.board.getScore());
+      await ApiService.endgame();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   handleKeyDown(event) {
     if (this.state.board.hasWon()) {
@@ -216,6 +229,9 @@ export default class App extends React.Component {
       .map((tile) => <TileView tile={tile} key={tile.id} />);
     return (
       <div>
+        <div>
+          <button onClick={this.saveGame}>Save</button>
+        </div>
         <div className='scores'>
           <span className='score'>scores: {this.state.board.getScore()}</span>
           <span className='best-score'>best: {localStorage.getItem('bestscore')}</span>
@@ -233,7 +249,7 @@ export default class App extends React.Component {
         >
           {cells}
           {tiles}
-          <GameEndOverlay board={this.state.board} onRestart={this.restartGame.bind(this)} />
+          <GameEndOverlay board={this.state.board} onRestart={this.saveGame.bind(this)} />
         </div>
       </div>
     );
