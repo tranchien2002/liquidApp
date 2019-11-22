@@ -9,10 +9,14 @@ import GameEndOverlay from './components/GameEndOverlay';
 <<<<<<< HEAD
 import 'bootstrap/dist/css/bootstrap.css';
 import ApiService from './services/ApiService';
+<<<<<<< HEAD
 const { seedPrivate } = require('eosjs-ecc');
 =======
 import ApiService from './services/ApiService';
 >>>>>>> api service call endgame action
+=======
+import LeaderBoard from './components/leaderboard';
+>>>>>>> connect to blockchain
 
 export default class App extends React.Component {
   constructor(props) {
@@ -37,14 +41,46 @@ export default class App extends React.Component {
     this.setState({ board: new Board() });
   }
 
-  newGame() {
-    this.setState({ board: new Board() });
-  }
+  newGame = async () => {
+    let ranks = await ApiService.getRank();
+    console.log(ranks);
+    // try {
+    //   await ApiService.register();
+    // } catch (e) {
+    //   console.log(e);
+    // }
+    // try {
+    //   await ApiService.login();
+    // } catch (e) {
+    //   console.log(e);
+    // }
+    // try {
+    //   let test = await ApiService.sortRank();
+    //   console.log(test);
+    // } catch (e) {
+    //   console.log(e);
+    //   if (e.toString().indexOf('wrong public key') !== -1) {
+    //     this.setState({ loginError: `Wrong password`, isSigningIn: false });
+    //   } else if (e.toString().indexOf('vaccount not found') !== -1) {
+    //     this.setState({ loginError: `Wrong password`, isSigningIn: false });
+    //   } else if (e.toString().indexOf('invalid nonce') !== -1) {
+    //     this.setState({ loginError: `Please try again`, isSigningIn: false });
+    //   } else if (e.toString().indexOf('vaccount already exists') !== -1) {
+    //     this.setState({ loginError: `Account must be a-z 1-5`, isSigningIn: false });
+    //   } else if (e.toString().indexOf(`required service`) !== -1) {
+    //     this.setState({ loginError: `DSP Error, please try again`, isSigningIn: false });
+    //   } else {
+    //     this.setState({ loginError: e.toString(), isSigningIn: false });
+    //   }
+    //   return;
+    // }
+    // this.setState({ board: new Board() });
+  };
 
   saveGame = async () => {
     try {
       // await ApiService.endGame(this.state.board.getScore());
-      await ApiService.endgame();
+      await ApiService.login();
     } catch (error) {
       console.log(error);
     }
@@ -250,6 +286,9 @@ export default class App extends React.Component {
           {cells}
           {tiles}
           <GameEndOverlay board={this.state.board} onRestart={this.saveGame.bind(this)} />
+        </div>
+        <div>
+          <LeaderBoard />
         </div>
       </div>
     );

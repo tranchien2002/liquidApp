@@ -10,8 +10,7 @@ const contract = 'trinhtan1234';
 
 const crypto = require('crypto');
 
-// const contract = process.env.REACT_APP_EOS_CONTRACT_NAME;
-const contract = 'trinhtan3333';
+const contract = 'trinhtan2345';
 
 >>>>>>> api service call endgame action
 class ApiService {
@@ -40,15 +39,20 @@ class ApiService {
     return decryptArr;
   }
 
-  static async register({ username, key }) {
+  static async register() {
     const service = await (await getClient()).service('vaccounts', contract);
     return new Promise((resolve, reject) => {
-      localStorage.setItem('user_account', username);
-      localStorage.setItem('user_key', key);
+      // localStorage.setItem('user_account', username);
+      // localStorage.setItem('user_key', key);
       service
-        .push_liquid_account_transaction(contract, key, 'regaccount', {
-          vaccount: username
-        })
+        .push_liquid_account_transaction(
+          contract,
+          '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA',
+          'regaccount',
+          {
+            vaccount: 'chientm2'
+          }
+        )
         .then(() => {
           resolve();
         })
@@ -71,7 +75,7 @@ class ApiService {
 =======
   static async login() {
     const service = await (await getClient()).service('vaccounts', contract);
-    var username = 'chientm';
+    var username = 'chientm2';
     const key = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
     return new Promise((resolve, reject) => {
       service
@@ -87,9 +91,9 @@ class ApiService {
     });
   }
 
-  static async endgame(score) {
+  static async endgame() {
     const service = await (await getClient()).service('vaccounts', contract);
-    let key = '5Jomz7k16rnz64VuKDo3jKuvTYADifP5Cb3U2sUmoStyBuA1SK4';
+    let key = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
 
     return new Promise((resolve, reject) => {
       // localStorage.getItem('user_account');
@@ -97,8 +101,8 @@ class ApiService {
       service
         .push_liquid_account_transaction(contract, key, 'endgame', {
           date: 10,
-          vaccount: 'trinhtan2345',
-          game_data: { mapState: [], score: 100, flag_continue: false }
+          vaccount: 'chientm2',
+          score: '100'
         })
 >>>>>>> api service call endgame action
         .then(() => {
@@ -112,18 +116,44 @@ class ApiService {
 <<<<<<< HEAD
 =======
 
-  static async addaccount(btc, eth, eos) {
+  static async sortRank() {
     const service = await (await getClient()).service('vaccounts', contract);
-    var vaccount = 'chientm';
-    const privateKey = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
-    return await service.push_liquid_account_transaction(contract, privateKey, 'addaccount', {
-      vaccount,
-      btc: [],
-      eth: [],
-      eos: []
+    let key = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
+
+    return new Promise((resolve, reject) => {
+      // localStorage.getItem('user_account');
+      // localStorage.getItem('user_key');
+      service
+        .push_liquid_account_transaction(contract, key, 'sortrank', {
+          date: 13,
+          vaccount: 'chientm2',
+          score: '20'
+        })
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   }
+<<<<<<< HEAD
 >>>>>>> api service call endgame action
+=======
+
+  static async getRank() {
+    const service = await (await getClient()).service('ipfs', contract);
+    try {
+      let res = await service.get_vram_row(contract, contract, 'charts', 13);
+      console.log(res);
+    } catch (e) {
+      // if (e.toString().indexOf('key not found') !== -1) {
+      //   thisObject.setState({ btcAddressArr: [], ethAddressArr: [], eosAddressArr: [] });
+      // }
+      console.log(e);
+    }
+  }
+>>>>>>> connect to blockchain
 }
 
 export default ApiService;

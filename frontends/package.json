@@ -10,11 +10,14 @@
     "big-integer": "^1.6.48",
     "bignumber.js": "^9.0.0",
     "bootstrap": "^4.3.1",
+<<<<<<< HEAD
 =======
     "axios": "^0.19.0",
     "big-integer": "^1.6.48",
     "bignumber.js": "^9.0.0",
 >>>>>>> api service call endgame action
+=======
+>>>>>>> connect to blockchain
     "bytebuffer": "^5.0.1",
     "crypto": "^1.0.1",
     "eos-transit": "^4.0.1",
@@ -33,6 +36,7 @@
 >>>>>>> api service call endgame action
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
+    "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.12.0",
     "react-grid-layout": "^0.16.6",
     "react-modal": "^3.5.1",
