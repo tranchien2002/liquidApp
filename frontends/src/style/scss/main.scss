@@ -24,8 +24,8 @@ body {
 
 .board {
   order: 1;
-  width: 440px;
-  height: 440px;
+  width: 450px;
+  height: 450px;
   padding: 5px;
   background-color: #baa;
   border-radius: 7px;
@@ -53,6 +53,7 @@ body {
   text-align: center;
   text-transform: uppercase;
   padding-top: 0px;
+  padding-bottom: 44px;
 }
 
 .scores .score {
@@ -62,6 +63,13 @@ body {
 .newGame {
   text-align: right;
   margin-bottom: 20px;
+}
+
+.newGame div {
+  border-radius: 3px;
+  text-transform: uppercase;
+  color: #f75;
+  font-weight: bold;
 }
 
 .newGame span {
@@ -76,6 +84,7 @@ body {
   text-align: center;
   cursor: pointer;
   width: 30%;
+  margin-top: 10px;
 }
 
 .board .cell,
