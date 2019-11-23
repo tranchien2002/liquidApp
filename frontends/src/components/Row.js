@@ -1,22 +1,19 @@
 import React from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-const Row = () => {
+import { Row, Col } from 'reactstrap';
+const RowRank = (props) => {
   return (
-    <div className='row colheader'>
-      <div className='col-xs-1'>
-        <h4>#</h4>
-      </div>
-      <div className='col-xs-5'>
-        <h4>#</h4>
-      </div>
-      <div className='col-xs-3 recent'>
-        <h4>#</h4>
-      </div>
-      <div className='col-xs-3 alltime'>
-        <h4>#</h4>
-      </div>
-    </div>
+    <Row className='colheader'>
+      <Col className='col-xs-1'>
+        <h4>{props.rank}</h4>
+      </Col>
+      <Col className='col-xs-1'>
+        <h4>{props.name}</h4>
+      </Col>
+      <Col className='col-xs-1 recent'>
+        <h4>{props.score}</h4>
+      </Col>
+    </Row>
   );
 };
 
-export default Row;
+export default RowRank;

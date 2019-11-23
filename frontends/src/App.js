@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 import React from 'react';
 import './style/scss/main.scss';
 import './style/scss/style.scss';
@@ -6,17 +7,10 @@ import Register from './components/Register';
 import Cell from './components/Cell';
 import TileView from './components/TileView';
 import GameEndOverlay from './components/GameEndOverlay';
-<<<<<<< HEAD
 import 'bootstrap/dist/css/bootstrap.css';
 import ApiService from './services/ApiService';
-<<<<<<< HEAD
 const { seedPrivate } = require('eosjs-ecc');
-=======
-import ApiService from './services/ApiService';
->>>>>>> api service call endgame action
-=======
 import LeaderBoard from './components/leaderboard';
->>>>>>> connect to blockchain
 
 export default class App extends React.Component {
   constructor(props) {
@@ -32,7 +26,8 @@ export default class App extends React.Component {
       isSigningIn: false,
       isLoggedIn: false,
       displayLogin: false,
-      loginError: 'none'
+      loginError: 'none',
+      usersRank: []
     };
     localStorage.setItem('bestscore', 0);
   }
@@ -42,8 +37,8 @@ export default class App extends React.Component {
   }
 
   newGame = async () => {
-    let ranks = await ApiService.getRank();
-    console.log(ranks);
+    this.setState({ board: new Board() });
+    // await ApiService.getCharts();
     // try {
     //   await ApiService.register();
     // } catch (e) {
@@ -52,13 +47,6 @@ export default class App extends React.Component {
     // try {
     //   await ApiService.login();
     // } catch (e) {
-    //   console.log(e);
-    // }
-    // try {
-    //   let test = await ApiService.sortRank();
-    //   console.log(test);
-    // } catch (e) {
-    //   console.log(e);
     //   if (e.toString().indexOf('wrong public key') !== -1) {
     //     this.setState({ loginError: `Wrong password`, isSigningIn: false });
     //   } else if (e.toString().indexOf('vaccount not found') !== -1) {
@@ -74,13 +62,17 @@ export default class App extends React.Component {
     //   }
     //   return;
     // }
-    // this.setState({ board: new Board() });
+    // try {
+    //   await ApiService.sortrank();
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   saveGame = async () => {
     try {
       // await ApiService.endGame(this.state.board.getScore());
-      await ApiService.login();
+      await ApiService.endgame();
     } catch (error) {
       console.log(error);
     }
@@ -129,10 +121,16 @@ export default class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.isComponentMounted = true;
     this.attemptCookieLogin();
+    let usersRank = await ApiService.getCharts();
+    usersRank.sort((a, b) => {
+      return b.score - a.score;
+    });
+    console.log(usersRank);
+    this.setState({ usersRank: usersRank });
   }
 
   componentWillUnmount() {
@@ -264,31 +262,30 @@ export default class App extends React.Component {
       .filter((tile) => tile.value !== 0)
       .map((tile) => <TileView tile={tile} key={tile.id} />);
     return (
-      <div>
-        <div>
-          <button onClick={this.saveGame}>Save</button>
-        </div>
-        <div className='scores'>
-          <span className='score'>scores: {this.state.board.getScore()}</span>
-          <span className='best-score'>best: {localStorage.getItem('bestscore')}</span>
-        </div>
+      <div className='row main'>
+        <div className='col'>
+          <div className='scores'>
+            <span className='score'>scores: {this.state.board.getScore()}</span>
+            <span className='best-score'>best: {localStorage.getItem('bestscore')}</span>
+          </div>
 
-        <div className='newGame'>
-          {islogin}
-          <span onClick={this.newGame.bind(this)}>New Game</span>
+          <div className='newGame'>
+            {islogin}
+            <span onClick={this.newGame.bind(this)}>New Game</span>
+          </div>
+          <div
+            className='board'
+            onTouchStart={this.handleTouchStart.bind(this)}
+            onTouchEnd={this.handleTouchEnd.bind(this)}
+            tabIndex='1'
+          >
+            {cells}
+            {tiles}
+            <GameEndOverlay board={this.state.board} onRestart={this.saveGame.bind(this)} />
+          </div>
         </div>
-        <div
-          className='board'
-          onTouchStart={this.handleTouchStart.bind(this)}
-          onTouchEnd={this.handleTouchEnd.bind(this)}
-          tabIndex='1'
-        >
-          {cells}
-          {tiles}
-          <GameEndOverlay board={this.state.board} onRestart={this.saveGame.bind(this)} />
-        </div>
-        <div>
-          <LeaderBoard />
+        <div className='col'>
+          <LeaderBoard users={this.state.usersRank} />
         </div>
       </div>
     );

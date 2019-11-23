@@ -1,14 +1,21 @@
 import React from 'react';
 import './leaderboard.css';
-import Row from './Row';
+import RowRank from './Row';
 class LeaderBoard extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log(props.users);
+  }
   render() {
     return (
-      <div className='container'>
+      <div className='container leaderboard'>
         <div className='leadheader'>
           <h2>Leaderboard</h2>
         </div>
-        <Row />
+        <RowRank rank='#' name='Name' score='Score' />
+        {this.props.users.map((item, index) => (
+          <RowRank rank={index + 1} name={item.vaccount} score={item.score} key={index} />
+        ))}
       </div>
     );
   }

@@ -1,18 +1,10 @@
 import { getClient } from '../helpers/getClient';
 import * as ecc from 'eosjs-ecc';
 import * as ecies from 'standard-ecies';
-<<<<<<< HEAD
-const crypto = require('crypto');
-
-const contract = 'trinhtan1234';
-
-=======
 
 const crypto = require('crypto');
 
-const contract = 'trinhtan2345';
-
->>>>>>> api service call endgame action
+const contract = 'trinhtan5555';
 class ApiService {
   static encrypt(message) {
     let pubKey = ecc.privateToPublic(localStorage.getItem('user_key'));
@@ -39,20 +31,15 @@ class ApiService {
     return decryptArr;
   }
 
-  static async register() {
+  static async register({ username, key }) {
     const service = await (await getClient()).service('vaccounts', contract);
     return new Promise((resolve, reject) => {
-      // localStorage.setItem('user_account', username);
-      // localStorage.setItem('user_key', key);
+      localStorage.setItem('user_account', username);
+      localStorage.setItem('user_key', key);
       service
-        .push_liquid_account_transaction(
-          contract,
-          '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA',
-          'regaccount',
-          {
-            vaccount: 'chientm2'
-          }
-        )
+        .push_liquid_account_transaction(contract, key, 'regaccount', {
+          vaccount: username
+        })
         .then(() => {
           resolve();
         })
@@ -62,21 +49,10 @@ class ApiService {
     });
   }
 
-<<<<<<< HEAD
-  static async login({ username, key }) {
-    const service = await (await getClient()).service('vaccounts', contract);
-    return new Promise((resolve, reject) => {
-      localStorage.getItem('user_account');
-      localStorage.getItem('user_key');
-      service
-        .push_liquid_account_transaction(contract, key, 'login', {
-          vaccount: username
-        })
-=======
   static async login() {
     const service = await (await getClient()).service('vaccounts', contract);
-    var username = 'chientm2';
-    const key = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
+    var username = localStorage.getItem('user_account');
+    const key = localStorage.getItem('user_key');
     return new Promise((resolve, reject) => {
       service
         .push_liquid_account_transaction(contract, key, 'login', {
@@ -91,20 +67,19 @@ class ApiService {
     });
   }
 
-  static async endgame() {
+  static async endgame(score) {
     const service = await (await getClient()).service('vaccounts', contract);
-    let key = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
-
+    let key = localStorage.getItem('user_key');
+    let account = localStorage.getItem('user_account');
     return new Promise((resolve, reject) => {
       // localStorage.getItem('user_account');
       // localStorage.getItem('user_key');
       service
         .push_liquid_account_transaction(contract, key, 'endgame', {
-          date: 10,
-          vaccount: 'chientm2',
-          score: '100'
+          date: '2019',
+          vaccount: account,
+          game_data: { mapState: [], score: 100, flag_continue: false }
         })
->>>>>>> api service call endgame action
         .then(() => {
           resolve();
         })
@@ -113,21 +88,20 @@ class ApiService {
         });
     });
   }
-<<<<<<< HEAD
-=======
 
-  static async sortRank() {
+  static async sortrank(score) {
     const service = await (await getClient()).service('vaccounts', contract);
-    let key = '5JfrrD7khysHe9Z4igmUwuUuRVUfrtBJqkbTjmzda7CGvGpGyuA';
+    let key = localStorage.getItem('user_key');
+    let account = localStorage.getItem('user_account');
 
     return new Promise((resolve, reject) => {
       // localStorage.getItem('user_account');
       // localStorage.getItem('user_key');
       service
         .push_liquid_account_transaction(contract, key, 'sortrank', {
-          date: 13,
-          vaccount: 'chientm2',
-          score: '20'
+          date: '2019',
+          vaccount: account,
+          score: 10000
         })
         .then(() => {
           resolve();
@@ -137,23 +111,13 @@ class ApiService {
         });
     });
   }
-<<<<<<< HEAD
->>>>>>> api service call endgame action
-=======
 
-  static async getRank() {
+  static async getCharts() {
+    console.log('contract', contract);
     const service = await (await getClient()).service('ipfs', contract);
-    try {
-      let res = await service.get_vram_row(contract, contract, 'charts', 13);
-      console.log(res);
-    } catch (e) {
-      // if (e.toString().indexOf('key not found') !== -1) {
-      //   thisObject.setState({ btcAddressArr: [], ethAddressArr: [], eosAddressArr: [] });
-      // }
-      console.log(e);
-    }
+    const response = await service.get_vram_row(contract, contract, 'charts', 2019);
+    return response.row.top;
   }
->>>>>>> connect to blockchain
 }
 
 export default ApiService;

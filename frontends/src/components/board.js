@@ -106,9 +106,6 @@ Board.prototype.moveLeft = function() {
     }
     this.cells[row] = resultRow;
   }
-  // for (let i = 0; i < Board.size; ++i) {
-  //   console.log(this.cells[i]);
-  // }
   return hasChanged;
 };
 
