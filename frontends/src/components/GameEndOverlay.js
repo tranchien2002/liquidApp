@@ -14,7 +14,7 @@ let GameEndOverlay = ({ board, onRestart }) => {
     <div className='overlay'>
       <p className='message'>{contents}</p>
       <button className='saveGame' onClick={onRestart}>
-        Save Game
+        Save Score
       </button>
     </div>
   );
