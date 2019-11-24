@@ -12,7 +12,7 @@ const Register = (props) => {
   return (
     <div>
       <Button color='primary' onClick={toggle}>
-        Register
+        Login
       </Button>
       <Modal isOpen={modal} toggle={toggle} className={className}>
         <ModalHeader toggle={toggle}>Login / Sign Up</ModalHeader>
