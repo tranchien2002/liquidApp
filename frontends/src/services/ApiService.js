@@ -71,14 +71,13 @@ class ApiService {
     const service = await (await getClient()).service('vaccounts', contract);
     let key = localStorage.getItem('user_key');
     let account = localStorage.getItem('user_account');
+
     return new Promise((resolve, reject) => {
-      // localStorage.getItem('user_account');
-      // localStorage.getItem('user_key');
       service
         .push_liquid_account_transaction(contract, key, 'endgame', {
           date: '2019',
           vaccount: account,
-          game_data: { mapState: [], score: 100, flag_continue: false }
+          score: score
         })
         .then(() => {
           resolve();
@@ -101,7 +100,7 @@ class ApiService {
         .push_liquid_account_transaction(contract, key, 'sortrank', {
           date: '2019',
           vaccount: account,
-          score: 10000
+          score: score
         })
         .then(() => {
           resolve();
@@ -115,6 +114,7 @@ class ApiService {
   static async getCharts() {
     const service = await (await getClient()).service('ipfs', contract);
     const response = await service.get_vram_row(contract, contract, 'charts', 2019);
+    console.log('res', response);
     return response.row.top;
   }
 
