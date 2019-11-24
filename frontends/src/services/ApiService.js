@@ -113,10 +113,15 @@ class ApiService {
   }
 
   static async getCharts() {
-    console.log('contract', contract);
     const service = await (await getClient()).service('ipfs', contract);
     const response = await service.get_vram_row(contract, contract, 'charts', 2019);
     return response.row.top;
+  }
+
+  static async getScore(account) {
+    const service = await (await getClient()).service('ipfs', contract);
+    const response = await service.get_vram_row(contract, contract, 'users', account);
+    console.log(response);
   }
 }
 

@@ -27,7 +27,8 @@ export default class App extends React.Component {
       isLoggedIn: false,
       displayLogin: false,
       loginError: 'none',
-      usersRank: []
+      usersRank: [],
+      bestscore: 0
     };
     localStorage.setItem('bestscore', 0);
   }
@@ -71,7 +72,6 @@ export default class App extends React.Component {
 
   saveGame = async () => {
     try {
-      // await ApiService.endGame(this.state.board.getScore());
       await ApiService.endgame();
     } catch (error) {
       console.log(error);
@@ -121,21 +121,29 @@ export default class App extends React.Component {
     }
   }
 
-  async componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown.bind(this));
-    this.isComponentMounted = true;
-    this.attemptCookieLogin();
+  getCharts = async () => {
     let usersRank = await ApiService.getCharts();
     usersRank.sort((a, b) => {
       return b.score - a.score;
     });
     usersRank = usersRank.slice(0, 10);
     this.setState({ usersRank: usersRank });
+  };
+
+  async componentDidMount() {
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
+    this.isComponentMounted = true;
+    this.attemptCookieLogin();
+    await this.getCharts();
+    this.interval = setInterval(async () => {
+      await this.getCharts();
+    }, 5000);
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown.bind(this));
     this.isComponentMounted = false;
+    clearInterval(this.interval);
   }
 
   showHideLogin = () => {
@@ -150,8 +158,6 @@ export default class App extends React.Component {
     event.preventDefault();
 
     const { form } = this.state;
-    console.log('----------------------');
-    console.log(form);
     this.setState({ isSigningIn: true });
     try {
       await ApiService.register(form);
@@ -191,13 +197,11 @@ export default class App extends React.Component {
   };
 
   attemptCookieLogin = async () => {
-    this.setState({ isAddingAccount: true });
     let account = localStorage.getItem('user_account');
     let key = localStorage.getItem('user_key');
     if (account != null && key != null) {
       this.setState({ isLoggedIn: true, form: { username: account } });
     }
-    this.setState({ isAddingAccount: false });
     return;
   };
 
@@ -265,8 +269,12 @@ export default class App extends React.Component {
       <div className='row main'>
         <div className='col'>
           <div className='scores'>
-            <span className='score'>scores: {this.state.board.getScore()}</span>
-            <span className='best-score'>best: {localStorage.getItem('bestscore')}</span>
+            {this.state.isLoggedIn ? (
+              <span className='score'>best: {localStorage.getItem('bestscore')}</span>
+            ) : (
+              ''
+            )}
+            <span className='best-score'>scores: {this.state.board.getScore()}</span>
           </div>
 
           <div className='newGame'>
