@@ -1,10 +1,10 @@
 import { getClient } from '../helpers/getClient';
 import * as ecc from 'eosjs-ecc';
 import * as ecies from 'standard-ecies';
+
 const crypto = require('crypto');
 
-const contract = 'trinhtan1234';
-
+const contract = 'trinhtan5555';
 class ApiService {
   static encrypt(message) {
     let pubKey = ecc.privateToPublic(localStorage.getItem('user_key'));
@@ -49,11 +49,11 @@ class ApiService {
     });
   }
 
-  static async login({ username, key }) {
+  static async login() {
     const service = await (await getClient()).service('vaccounts', contract);
+    var username = localStorage.getItem('user_account');
+    const key = localStorage.getItem('user_key');
     return new Promise((resolve, reject) => {
-      localStorage.getItem('user_account');
-      localStorage.getItem('user_key');
       service
         .push_liquid_account_transaction(contract, key, 'login', {
           vaccount: username
@@ -65,6 +65,58 @@ class ApiService {
           reject(err);
         });
     });
+  }
+
+  static async endgame(score) {
+    const service = await (await getClient()).service('vaccounts', contract);
+    let key = localStorage.getItem('user_key');
+    let account = localStorage.getItem('user_account');
+    return new Promise((resolve, reject) => {
+      // localStorage.getItem('user_account');
+      // localStorage.getItem('user_key');
+      service
+        .push_liquid_account_transaction(contract, key, 'endgame', {
+          date: '2019',
+          vaccount: account,
+          game_data: { mapState: [], score: 100, flag_continue: false }
+        })
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  static async sortrank(score) {
+    const service = await (await getClient()).service('vaccounts', contract);
+    let key = localStorage.getItem('user_key');
+    let account = localStorage.getItem('user_account');
+
+    return new Promise((resolve, reject) => {
+      // localStorage.getItem('user_account');
+      // localStorage.getItem('user_key');
+      service
+        .push_liquid_account_transaction(contract, key, 'sortrank', {
+          date: '2019',
+          vaccount: account,
+          score: 10000
+        })
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  static async getCharts() {
+    console.log('contract', contract);
+    const service = await (await getClient()).service('ipfs', contract);
+    const response = await service.get_vram_row(contract, contract, 'charts', 2019);
+    return response.row.top;
   }
 }
 
