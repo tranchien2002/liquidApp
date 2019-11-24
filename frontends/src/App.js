@@ -37,42 +37,20 @@ export default class App extends React.Component {
     this.setState({ board: new Board() });
   }
 
-  newGame = async () => {
-    this.setState({ board: new Board() });
-    // await ApiService.getCharts();
-    // try {
-    //   await ApiService.register();
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    // try {
-    //   await ApiService.login();
-    // } catch (e) {
-    //   if (e.toString().indexOf('wrong public key') !== -1) {
-    //     this.setState({ loginError: `Wrong password`, isSigningIn: false });
-    //   } else if (e.toString().indexOf('vaccount not found') !== -1) {
-    //     this.setState({ loginError: `Wrong password`, isSigningIn: false });
-    //   } else if (e.toString().indexOf('invalid nonce') !== -1) {
-    //     this.setState({ loginError: `Please try again`, isSigningIn: false });
-    //   } else if (e.toString().indexOf('vaccount already exists') !== -1) {
-    //     this.setState({ loginError: `Account must be a-z 1-5`, isSigningIn: false });
-    //   } else if (e.toString().indexOf(`required service`) !== -1) {
-    //     this.setState({ loginError: `DSP Error, please try again`, isSigningIn: false });
-    //   } else {
-    //     this.setState({ loginError: e.toString(), isSigningIn: false });
-    //   }
-    //   return;
-    // }
-    // try {
-    //   await ApiService.sortrank();
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  getCharts = async () => {
+    let usersRank = await ApiService.getCharts();
+    usersRank.sort((a, b) => {
+      return b.score - a.score;
+    });
+    usersRank = usersRank.slice(0, 10);
+    this.setState({ usersRank: usersRank });
   };
 
-  saveGame = async () => {
+  saveGame = async (event) => {
+    const score = this.state.board.getScore();
+
     try {
-      await ApiService.endgame();
+      await ApiService.sortrank(score);
     } catch (error) {
       console.log(error);
     }
@@ -121,16 +99,10 @@ export default class App extends React.Component {
     }
   }
 
-  getCharts = async () => {
-    let usersRank = await ApiService.getCharts();
-    usersRank.sort((a, b) => {
-      return b.score - a.score;
-    });
-    usersRank = usersRank.slice(0, 10);
-    this.setState({ usersRank: usersRank });
-  };
-
   async componentDidMount() {
+    if (localStorage.getItem('user_account')) {
+      this.setState({ isSigningIn: true });
+    }
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.isComponentMounted = true;
     this.attemptCookieLogin();
@@ -158,6 +130,8 @@ export default class App extends React.Component {
     event.preventDefault();
 
     const { form } = this.state;
+
+    //console.log(form);
     this.setState({ isSigningIn: true });
     try {
       await ApiService.register(form);
@@ -279,7 +253,7 @@ export default class App extends React.Component {
 
           <div className='newGame'>
             {islogin}
-            <span onClick={this.newGame.bind(this)}>New Game</span>
+            <span onClick={this.restartGame.bind(this)}>New Game</span>
           </div>
           <div
             className='board'
@@ -289,7 +263,24 @@ export default class App extends React.Component {
           >
             {cells}
             {tiles}
-            <GameEndOverlay board={this.state.board} onRestart={this.saveGame.bind(this)} />
+            <GameEndOverlay
+              isLogin={this.state.isSigningIn}
+              board={this.state.board}
+              onRestart={this.restartGame.bind(this)}
+              displayLogin={this.state.displayLogin}
+              show={this.state.displayLogin}
+              showHideLogin={this.showHideLogin}
+              login={this.login.bind(this)}
+              logout={this.logout.bind(this)}
+              handleChangeLogin={this.handleChangeLogin.bind(this)}
+              error={this.state.loginError}
+              username={this.state.form.username}
+              password={this.state.form.pass}
+              isSigningIn={this.state.isSigningIn}
+              isLoggedIn={this.state.isLoggedIn}
+              loginNameForm={this.state.form}
+              saveGame={this.saveGame.bind(this)}
+            />
           </div>
         </div>
         <div className='col'>

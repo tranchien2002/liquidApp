@@ -16,7 +16,7 @@ const login = (props) => {
       <div onClick={props.closeLogin}></div>
       <section>
         <div>
-          <div>Username</div>
+          <label>Username</label>
           <div>
             <Input
               required={true}
@@ -29,7 +29,7 @@ const login = (props) => {
           </div>
         </div>
         <div>
-          <div>Password</div>
+          <label>Password</label>
           <div>
             <Input
               required={true}
