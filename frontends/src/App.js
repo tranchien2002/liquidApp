@@ -129,7 +129,7 @@ export default class App extends React.Component {
     usersRank.sort((a, b) => {
       return b.score - a.score;
     });
-    console.log(usersRank);
+    usersRank = usersRank.slice(0, 10);
     this.setState({ usersRank: usersRank });
   }
 
