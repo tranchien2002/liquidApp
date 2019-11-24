@@ -11,6 +11,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import ApiService from './services/ApiService';
 const { seedPrivate } = require('eosjs-ecc');
 import LeaderBoard from './components/leaderboard';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -46,13 +48,15 @@ export default class App extends React.Component {
     this.setState({ usersRank: usersRank });
   };
 
-  saveGame = async (event) => {
+  saveGame = async () => {
     const score = this.state.board.getScore();
 
     try {
       await ApiService.sortrank(score);
+      toast.success('Success');
     } catch (error) {
       console.log(error);
+      toast.error('Error');
     }
   };
 
@@ -131,16 +135,18 @@ export default class App extends React.Component {
 
     const { form } = this.state;
 
-    //console.log(form);
     this.setState({ isSigningIn: true });
     try {
       await ApiService.register(form);
+      toast.success('Success Register');
     } catch (e) {
-      console.log(e);
+      toast.error('Error');
     }
     try {
       await ApiService.login(form);
+      toast.success('Success Login');
     } catch (e) {
+      toast.error('Error');
       if (e.toString().indexOf('wrong public key') !== -1) {
         this.setState({ loginError: `Wrong password`, isSigningIn: false });
       } else if (e.toString().indexOf('vaccount not found') !== -1) {
@@ -154,6 +160,7 @@ export default class App extends React.Component {
       } else {
         this.setState({ loginError: e.toString(), isSigningIn: false });
       }
+
       return;
     }
 
@@ -241,6 +248,7 @@ export default class App extends React.Component {
       .map((tile) => <TileView tile={tile} key={tile.id} />);
     return (
       <div className='row main'>
+        <ToastContainer position='top-right' autoClose={2000} />
         <div className='col'>
           <div className='scores'>
             {this.state.isLoggedIn ? (
